@@ -66,64 +66,95 @@ jobs:
       - name: Build the project
         env:
           PROJECT_NAME: Obsolete
-          SCHEME_NAME: YMHUD
-          TARGET_APP_PATH: ${{ github.workspace }}/DerivedData/Build/Products/Release-iphoneos/Obsolete.app
-          CODESIGNING_FOLDER_PATH: ${{ github.workspace }}/DerivedData/Build/Products/Release-iphoneos/Obsolete.app
-          CURRENT_PROJECT_VERSION: ${{ github.ref_name }}
-          PRODUCT_BUNDLE_IDENTIFIER: com.example.obsolete
+          TARGET_NAME: Obsolete
         run: |
-          # Set bundle identifier and version
-          BUNDLE_ID="com.example.obsolete"
-          VERSION="${{ github.ref_name }}"
+          # Set version
+          if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            VERSION="${{ github.ref_name }}"
+          else
+            VERSION="1.0.0"
+          fi
           BUILD_NUMBER=$(date +%s)
+          BUNDLE_ID="com.example.obsolete"
 
-          # Create temporary Info.plist with proper bundle ID
-          echo "Setting bundle ID: $BUNDLE_ID"
-          echo "Setting version: $VERSION"
+          echo "Building $PROJECT_NAME..."
+          echo "Version: $VERSION"
+          echo "Build: $BUILD_NUMBER"
 
-          # Build the project
+          # Build using target instead of scheme
           xcodebuild -project Obsolete.xcodeproj \
-            -scheme YMHUD \
+            -target Obsolete \
             -configuration Release \
-            -destination 'generic/platform=iOS' \
+            -sdk iphoneos \
             -derivedDataPath DerivedData \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             MARKETING_VERSION="$VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
-            CODE_SIGN_STYLE="Automatic" \
-            build 2>&1 | tail -50
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build.log
 
           # Check if build succeeded
-          if [ ${PIPESTATUS[0]} -ne 0 ]; then
-            echo "Build failed!"
+          BUILD_EXIT=${PIPESTATUS[0]}
+          if [ $BUILD_EXIT -ne 0 ]; then
+            echo "Build failed with exit code $BUILD_EXIT"
+            echo "Build log:"
+            cat build.log
             exit 1
           fi
 
-          echo "Build successful!"
+          # Verify the build output
+          APP_PATH="DerivedData/Build/Products/Release-iphoneos/Obsolete.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "Error: App not found at $APP_PATH"
+            echo "Checking build directory..."
+            ls -la DerivedData/Build/Products/Release-iphoneos/
+            exit 1
+          fi
+
+          echo "Build successful! App created at $APP_PATH"
 
       - name: Create .tipa package
-        env:
-          PRODUCT_BUNDLE_IDENTIFIER: com.example.obsolete
-          TARGET_APP_PATH: ${{ github.workspace }}/DerivedData/Build/Products/Release-iphoneos/Obsolete.app
         run: |
+          APP_PATH="DerivedData/Build/Products/Release-iphoneos/Obsolete.app"
+
           # Create Package directory
           mkdir -p Package/Payload
 
           # Copy .app bundle
-          cp -r "$TARGET_APP_PATH" Package/Payload/
+          echo "Copying app bundle..."
+          cp -r "$APP_PATH" Package/Payload/
+
+          # Verify the copy
+          if [ ! -d "Package/Payload/Obsolete.app" ]; then
+            echo "Error: Failed to copy app bundle"
+            ls -la Package/Payload/
+            exit 1
+          fi
 
           # Create .tipa file
+          echo "Creating .tipa package..."
           cd Package
-          zip -r "${{ env.PROJECT_NAME }}.tipa" *
-          ls -lh "${{ env.PROJECT_NAME }}.tipa"
+          zip -r "Obsolete.tipa" *
+
+          # Verify the .tipa was created
+          if [ ! -f "Obsolete.tipa" ]; then
+            echo "Error: Failed to create .tipa package"
+            ls -la
+            exit 1
+          fi
+
+          ls -lh "Obsolete.tipa"
 
           # Move to workspace root
-          mv Package/*.tipa ./
+          mv "Obsolete.tipa" ../
 
       - name: Upload .tipa artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Obsolete-${{ github.ref_name }}.tipa
+          name: Obsolete
           path: Obsolete.tipa
           retention-days: 30
 
