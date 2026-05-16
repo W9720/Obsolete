@@ -81,20 +81,19 @@ jobs:
           echo "Version: $VERSION"
           echo "Build: $BUILD_NUMBER"
 
-          # Build using target instead of scheme
+          # Build using target with explicit output path
           xcodebuild -project Obsolete.xcodeproj \
             -target Obsolete \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath DerivedData \
+            -archivePath build/Obsolete.xcarchive \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             MARKETING_VERSION="$VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_ALLOWED=NO \
-            build 2>&1 | tee build.log
+            archive 2>&1 | tee build.log
 
           # Check if build succeeded
           BUILD_EXIT=${PIPESTATUS[0]}
@@ -105,12 +104,12 @@ jobs:
             exit 1
           fi
 
-          # Verify the build output
-          APP_PATH="DerivedData/Build/Products/Release-iphoneos/Obsolete.app"
+          # Extract .app from archive
+          APP_PATH="build/Obsolete.xcarchive/Products/Applications/Obsolete.app"
           if [ ! -d "$APP_PATH" ]; then
             echo "Error: App not found at $APP_PATH"
-            echo "Checking build directory..."
-            ls -la DerivedData/Build/Products/Release-iphoneos/
+            echo "Checking archive directory..."
+            ls -la build/Obsolete.xcarchive/Products/Applications/
             exit 1
           fi
 
@@ -118,7 +117,7 @@ jobs:
 
       - name: Create .tipa package
         run: |
-          APP_PATH="DerivedData/Build/Products/Release-iphoneos/Obsolete.app"
+          APP_PATH="build/Obsolete.xcarchive/Products/Applications/Obsolete.app"
 
           # Create Package directory
           mkdir -p Package/Payload
