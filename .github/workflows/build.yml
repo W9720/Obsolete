@@ -81,9 +81,9 @@ jobs:
           echo "Version: $VERSION"
           echo "Build: $BUILD_NUMBER"
 
-          # Build using target with explicit output path
+          # Build using scheme with archive
           xcodebuild -project Obsolete.xcodeproj \
-            -target Obsolete \
+            -scheme YMHUD \
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/Obsolete.xcarchive \

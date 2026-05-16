@@ -16,9 +16,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "4887607B2B6C885C005C4BC7"
-                     BuildableName = "YMHUD.app"
-                     BlueprintName = "YMHUD"
-                     ReferencedContainer = "container:YMHUD.xcodeproj">
+                     BuildableName = "Obsolete.app"
+                     BlueprintName = "Obsolete"
+                     ReferencedContainer = "container:Obsolete.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -34,9 +34,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4887607B2B6C885C005C4BC7"
-               BuildableName = "YMHUD.app"
-               BlueprintName = "YMHUD"
-               ReferencedContainer = "container:YMHUD.xcodeproj">
+               BuildableName = "Obsolete.app"
+               BlueprintName = "Obsolete"
+               ReferencedContainer = "container:Obsolete.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -54,9 +54,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "488760962B6C885D005C4BC7"
-               BuildableName = "YMHUDTests.xctest"
-               BlueprintName = "YMHUDTests"
-               ReferencedContainer = "container:YMHUD.xcodeproj">
+               BuildableName = "ObsoleteTests.xctest"
+               BlueprintName = "ObsoleteTests"
+               ReferencedContainer = "container:Obsolete.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -65,9 +65,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "488760A02B6C885D005C4BC7"
-               BuildableName = "YMHUDUITests.xctest"
-               BlueprintName = "YMHUDUITests"
-               ReferencedContainer = "container:YMHUD.xcodeproj">
+               BuildableName = "ObsoleteUITests.xctest"
+               BlueprintName = "ObsoleteUITests"
+               ReferencedContainer = "container:Obsolete.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -87,9 +87,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4887607B2B6C885C005C4BC7"
-            BuildableName = "YMHUD.app"
-            BlueprintName = "YMHUD"
-            ReferencedContainer = "container:YMHUD.xcodeproj">
+            BuildableName = "Obsolete.app"
+            BlueprintName = "Obsolete"
+            ReferencedContainer = "container:Obsolete.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -104,9 +104,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4887607B2B6C885C005C4BC7"
-            BuildableName = "YMHUD.app"
-            BlueprintName = "YMHUD"
-            ReferencedContainer = "container:YMHUD.xcodeproj">
+            BuildableName = "Obsolete.app"
+            BlueprintName = "Obsolete"
+            ReferencedContainer = "container:Obsolete.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
